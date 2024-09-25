@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Toolbox</title>
+    <script async defer type="module" src="./dist/main.js"></script>
+</head>
+<body>
+    <label for="file">Upload File</label>
+    <input type="file" name="file" id="file" accept=".csv">
+    <label for="mass">Mass</label>
+    <input type="text" name="mass" id="mass" value="1">
+    <h3>LSTDist: <span id="lstdist">-</span></h3>
+    <h3>LSTWork: <span id="lstwork">-</span></h3>
+    <h3>LSTSX: <span id="lstsx">-</span></h3>
+    <h3>LSTSY: <span id="lstsy">-</span></h3>
+    <h3>LSTSZ: <span id="lstsz">-</span></h3>
+    <div class="container">
+        <canvas id="raw"></canvas>
+        <canvas id="vel"></canvas>
+        <canvas id="displacement"></canvas>
+        <canvas id="force"></canvas>
+        <canvas id="distance"></canvas>
+        <canvas id="work"></canvas>
+    </div>
+</body>
+</html>
