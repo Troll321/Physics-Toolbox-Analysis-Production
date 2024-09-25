@@ -15,6 +15,29 @@
     <pre>
 - You can filter out the data you want to see by pressing on the legend above!
   by pressing the legend above the chart for example pressing sx will toggle sx on or off
+
+- LSTsx, LSTsy, LSTsz, LSTWork, LSTDist represents the last data exist in the dataset
+
+- Mass can be changed (assume its unit is kg)
+
+- Formula Integral (velocity):
+Vel[i] = Vel[i-1] + (dx*a[i-1])
+
+- Formula Integral S (displacement):
+S[i] = S[i-1] + dx*(vel[i-1]+vel[i])/2
+
+- Formula Force:
+F = m*a[i]
+
+- Formula Distance:
+Distance = Sqrt(disp[i]-disp[i-1])
+Assume disp is a vector
+
+- Formula Work:
+W[i] = F[i-1] . (disp[i]-disp[i-1])
+Assume F and disp is a vector and "." is a Dot Product operation between 2 vector
+
+- Note: Distance is scalar while displacement is vector
     </pre>
     </h2>
 </body>

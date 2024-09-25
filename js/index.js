@@ -77,9 +77,16 @@ function updateData() {
         const mass = parseFloat(massE.value) || 0;
         let arr = reader.result.split("\n").map(now => {return now.split(",").map(
             val => {
-                return parseFloat(val) || val;
+                return !isNaN(parseFloat(val)) ? parseFloat(val) : val;
         });});
-        const header = arr[0].map(now => {let tmp = now.split(""); tmp.shift(); return tmp.join("");});
+        if (arr[0].length !== arr[1].length) {
+            arr = reader.result.split("\n").map(now => {return now.split(";").map(
+                val => {
+                    return !isNaN(parseFloat(val.split(",").join("."))) ? parseFloat(val.split(",").join(".")) : val;
+            });});
+        }
+
+        const header = arr[0].map(now => {let tmp = now.split(""); tmp.shift(); return tmp.join("").split(" ")[0];});
         arr.shift();
         header.shift();
         const time = arr.map(now => {return now[0];});
@@ -116,13 +123,15 @@ function updateData() {
                     continue ;
                 }
                 velArr[j] = velArr[j-1] + ((time[j]-time[j-1])*arr[j-1][i]);
+                if(!velArr[j]) {
+                    console.log(velArr[j], (time[j]-time[j-1]), arr[j-1][i]);
+                }
             }
             velArr.pop();
             velDataset.push({
                 label: "v"+header[i],
                 data: velArr
             });
-            
         }
 
         myCharts.push(new Chart(velE, {
