@@ -1,7 +1,10 @@
 import Chart from "chart.js/auto"
+import { isNumber } from "chart.js/helpers";
 
 const fileE = document.getElementById("file");
 const massE = document.getElementById("mass");
+const exportE = document.getElementById("export");
+const limiterE = document.getElementById("limiter");
 
 const rawE = document.getElementById("raw");
 const velE = document.getElementById("vel");
@@ -15,10 +18,15 @@ const lstszE = document.getElementById("lstsz");
 const lstdistE = document.getElementById("lstdist");
 const lstworkE = document.getElementById("lstwork");
 
-fileE.addEventListener("change", e => {
+let content = [];
+
+fileE.addEventListener("change", () => {
     updateData();
 });
-massE.addEventListener("change", e => {
+massE.addEventListener("change", () => {
+    updateData();
+});
+limiterE.addEventListener("change", () => {
     updateData();
 })
 
@@ -62,6 +70,9 @@ let myCharts = [];
 function updateData() {
     const file = fileE.files[0];
     if(!file) {return ;}
+
+    content = [];
+    exportE.href = `javascript:void(0)`;
 
     console.log("Cleaning Up!");
     while(myCharts.length > 0) {
@@ -254,6 +265,56 @@ function updateData() {
             ...myOptions
         }));
         lstworkE.innerText = workArr[workArr.length-1];
+
+
+        const datasets = [
+        rawDatasets
+        ,velDataset
+        ,dispDataset
+        ,forceDataset
+        ,distDataset
+        ,workDataset
+        ];
+
+        const myHeader = ["time"];
+        datasets.forEach(dataset => {
+            dataset.forEach(ds => {
+                myHeader.push(ds.label);
+            });
+        });
+        content.push(myHeader);
+
+        for (let i = 0; i < time.length; i++) {
+            const myArr = [time[i]];
+            datasets.forEach(dataset => {
+                dataset.forEach(ds => {
+                    myArr.push(ds.data[i]);
+                });
+            });
+            content.push(myArr);
+        }
+
+        console.log(content);
+
+        const limiter = limiterE.value || ",";
+        exportE.href = `data:application/octet-stream,${content.map(arbek => {
+            return arbek.map(val => {
+                if(!isNumber(val)) {return val;}
+                let mystr = val.toString();
+                if(/e-/.test(mystr)) {
+                    mystr = mystr.split("e-");
+                    const jum = parseInt(mystr[1]);
+                    mystr = mystr[0];
+                    for (let w = 0; w < jum; w++) {
+                        mystr += "0";                        
+                    }
+                    console.log(val, mystr);
+                    return mystr;
+                } else {
+                    return mystr;
+                }
+            }).join(limiter);
+        }).join("%0A")}%0A`;
     });
     reader.readAsText(file);
 }

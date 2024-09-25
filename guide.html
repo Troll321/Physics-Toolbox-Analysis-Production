@@ -16,26 +16,33 @@
 - You can filter out the data you want to see by pressing on the legend above!
   by pressing the legend above the chart for example pressing sx will toggle sx on or off
 
+- Export as CSV is now supported!
+  ONLY WPS Office can't parse this idk :V
+  Hey it work's on excel tho
+
 - LSTsx, LSTsy, LSTsz, LSTWork, LSTDist represents the last data exist in the dataset
 
 - Mass can be changed (assume its unit is kg)
 
 - Formula Integral (velocity):
-Vel[i] = Vel[i-1] + (dx*a[i-1])
+vel[t] = vel[t-1] + (dt*a[t-1])
 
 - Formula Integral S (displacement):
-S[i] = S[i-1] + dx*(vel[i-1]+vel[i])/2
+s[t] = s[t-1] + dt*(vel[t-1]+vel[t])/2
 
 - Formula Force:
-F = m*a[i]
+f[t] = m*a[t]
 
 - Formula Distance:
-Distance[i] = Distance[i-1] + Sqrt(disp[i]-disp[i-1])
-Assume disp is a vector
+distance[t] = distance[t-1] + sqrt(|s[t]-s[t-1]|)
+Assume disp is a vector and |VECTOR| is taking the magnitude
 
 - Formula Work:
-W[i] = W[i-1] + (F[i-1] . (disp[i]-disp[i-1]))
+w[t] = w[t-1] + (f[t-1] . (disp[t]-disp[t-1]))
 Assume F and disp is a vector and "." is a Dot Product operation between 2 vector
+
+- The Total (ex: aTot, vTot, sTot) is calculated seperately by taking the magnitude of that vector
+  Pytahogrean theorem for that: sqrt(ax^2 + ay^2 + az^2)
 
 - Note: Distance is scalar while displacement is vector
     </pre>

@@ -21,6 +21,12 @@
     <input type="file" name="file" id="file" accept=".csv">
     <label for="mass">Mass</label>
     <input type="text" name="mass" id="mass" value="1">
+    <br><hr><br>
+    <label for="limiter">Limiter: For IOS use "<b>,</b>" for Android use "<b>;</b>"</label>
+    <br>
+    <input type="text" name="limiter" id="limiter" value=",">
+    <br><br>
+    <a id="export" download="analysis.csv" href="javascript:void(0)"><button>Export as CSV</button></a>
     <h3>LSTDist: <span id="lstdist">-</span> m</h3>
     <h3>LSTWork: <span id="lstwork">-</span> J</h3>
     <h3>LSTSX: <span id="lstsx">-</span> m</h3>
