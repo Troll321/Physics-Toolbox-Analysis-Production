@@ -8,6 +8,7 @@ const velE = document.getElementById("vel");
 const dispE = document.getElementById("displacement");
 const forceE = document.getElementById("force");
 const distE = document.getElementById("distance");
+const workE = document.getElementById("work");
 const lstsxE = document.getElementById("lstsx");
 const lstsyE = document.getElementById("lstsy");
 const lstszE = document.getElementById("lstsz");
@@ -20,6 +21,41 @@ fileE.addEventListener("change", e => {
 massE.addEventListener("change", e => {
     updateData();
 })
+
+const myOptions = {
+    options: {
+        data: {
+            backgroundColor: "rgba(255,0,0,1)"
+        },
+        barThickness: 1
+    }
+};
+
+function getBarDataOptions(index) {
+    let color = "";
+    switch (index) {
+        case 0:
+            color = "64, 161, 234"
+            break;
+        case 1:
+            color = "252, 104, 133"
+            break ;
+        case 2:
+            color = "252, 161, 70"
+            break ;
+        case 3:
+            color = "253, 206, 91"
+            break ;
+        default: 
+            color = "191, 245, 76"
+            break ;
+    }
+    return {
+        backgroundColor: `rgba(${color},1)`,
+        borderColor: `rgba(0,0,0,1)`,
+        pointStyle: true
+    };
+}
 
 let myCharts = [];
 
@@ -54,7 +90,8 @@ function updateData() {
         for (let i = 0; i < header.length; i++) {
             rawDatasets.push({
                 label: "a"+header[i],
-                data: arr.map(now => {return now[i];})
+                data: arr.map(now => {return now[i];}),
+                ...getBarDataOptions(i)
             });
         }
 
@@ -62,8 +99,9 @@ function updateData() {
             type: "bar",
             data: {
                 labels: time,
-                datasets: rawDatasets
-            }
+                datasets: rawDatasets,
+            },
+            ...myOptions,
         }));
 
         // Velocity
@@ -92,7 +130,8 @@ function updateData() {
             data: {
                 labels: time,
                 datasets: velDataset
-            }
+            },
+            ...myOptions
         }));
 
         // Displacement
@@ -121,7 +160,8 @@ function updateData() {
             data: {
                 labels: time,
                 datasets: dispDataset
-            }
+            },
+            ...myOptions
         }));
         lstsxE.innerText = dispDataset[0].data[dispDataset[0].data.length-1];
         lstsyE.innerText = dispDataset[1].data[dispDataset[1].data.length-1];
@@ -139,7 +179,8 @@ function updateData() {
             forceArr.pop();
             forceDataset.push({
                 label: "f"+header[i],
-                data: forceArr
+                data: forceArr,
+                ...getBarDataOptions(i)
             });
             
         }
@@ -149,7 +190,8 @@ function updateData() {
             data: {
                 labels: time,
                 datasets: forceDataset
-            }
+            },
+            ...myOptions
         }));
 
 
@@ -172,9 +214,37 @@ function updateData() {
             data: {
                 labels: time,
                 datasets: distDataset
-            }
+            },
+            ...myOptions
         }));
         lstdistE.innerText = distArr[distArr.length-1];
+
+
+        // Work
+        const workDataset = [];
+        let workArr = [];
+        for (let j = 0; j < time.length; j++) {
+            workArr.push(0);
+            if(j == 0) {continue ;}
+            const deltaS = [dispDataset[0].data[j]-dispDataset[0].data[j-1], dispDataset[1].data[j]-dispDataset[1].data[j-1], dispDataset[2].data[j]-dispDataset[2].data[j-1]];
+            workArr[j] = workArr[j-1] + (deltaS[0]*forceDataset[0].data[j-1] + deltaS[1]*forceDataset[1].data[j-1] + deltaS[2]*forceDataset[2].data[j-1]);
+        }
+        workArr.pop();
+        workDataset.push({
+            label: "work",
+            data: workArr
+        });
+            
+
+        myCharts.push(new Chart(workE, {
+            type: "line",
+            data: {
+                labels: time,
+                datasets: workDataset
+            },
+            ...myOptions
+        }));
+        lstworkE.innerText = workArr[workArr.length-1];
     });
     reader.readAsText(file);
 }
