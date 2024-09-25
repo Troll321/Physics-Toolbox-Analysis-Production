@@ -30,11 +30,11 @@ S[i] = S[i-1] + dx*(vel[i-1]+vel[i])/2
 F = m*a[i]
 
 - Formula Distance:
-Distance = Sqrt(disp[i]-disp[i-1])
+Distance[i] = Distance[i-1] + Sqrt(disp[i]-disp[i-1])
 Assume disp is a vector
 
 - Formula Work:
-W[i] = F[i-1] . (disp[i]-disp[i-1])
+W[i] = W[i-1] + (F[i-1] . (disp[i]-disp[i-1]))
 Assume F and disp is a vector and "." is a Dot Product operation between 2 vector
 
 - Note: Distance is scalar while displacement is vector
