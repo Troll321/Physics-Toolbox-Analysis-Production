@@ -21,6 +21,8 @@ const lstsyE = document.getElementById("lstsy");
 const lstszE = document.getElementById("lstsz");
 const lstdistE = document.getElementById("lstdist");
 const lstworkE = document.getElementById("lstwork");
+const lstworkpE = document.getElementById("lstworkp");
+const lstworkmE = document.getElementById("lstworkm");
 const lstemE = document.getElementById("lstem");
 
 let content = [];
@@ -284,6 +286,8 @@ function updateData() {
             ...myOptions
         }));
         lstworkE.innerText = workDataset[0].data[workDataset[0].data.length-1];
+        lstworkpE.innerText = workDataset[1].data[workDataset[1].data.length-1];
+        lstworkmE.innerText = workDataset[2].data[workDataset[2].data.length-1];
 
 
         // Energy
