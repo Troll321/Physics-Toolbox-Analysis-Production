@@ -304,7 +304,7 @@ function updateData() {
             }
             energyArr.pop();
             energyDataset.push({
-                label: "ΔE"+energyHeaderName[i],
+                label: "Δ E"+energyHeaderName[i],
                 data: energyArr
             });
         }
