@@ -11,6 +11,7 @@
     <script async defer type="module" src="./dist/main.js"></script>
 </head>
 <body>
+    <h1 style="text-align: center;">NEW PATCH: Energy is now supported, also work calculation is "a bit" different</h1>
     <i>Created By Atila (Troll321)</i>
     <br><br>
     <hr>
@@ -22,13 +23,16 @@
     <label for="mass">Mass</label>
     <input type="text" name="mass" id="mass" value="1">
     <br><hr><br>
-    <label for="limiter">Limiter: For IOS use "<b>,</b>" for Android use "<b>;</b>"</label>
+    <label for="Igrav">Include Gravity: </label><input type="checkbox" id="Igrav" name="Igrav" checked="true">
     <br>
-    <input type="text" name="limiter" id="limiter" value=",">
+    <label for="limiter">Limiter: </label>
+    <br>
+    <input type="text" name="limiter" id="limiter" value=";">
     <br><br>
     <a id="export" download="analysis.csv" href="javascript:void(0)"><button>Export as CSV</button></a>
     <h3>LSTDist: <span id="lstdist">-</span> m</h3>
     <h3>LSTWork: <span id="lstwork">-</span> J</h3>
+    <h3>LSTΔEm: <span id="lstem">-</span> J</h3>
     <h3>LSTSX: <span id="lstsx">-</span> m</h3>
     <h3>LSTSY: <span id="lstsy">-</span> m</h3>
     <h3>LSTSZ: <span id="lstsz">-</span> m</h3>
@@ -39,6 +43,8 @@
         <canvas id="force"></canvas>
         <canvas id="distance"></canvas>
         <canvas id="work"></canvas>
+        <canvas id="energy"></canvas>
+        <canvas id="workem"></canvas>
     </div>
 </body>
 </html>

@@ -11,41 +11,57 @@
     <p>Note: Application only accept raw data not processed! make sure the format is the same when you processed it</p>
     <br><hr><br>
     <h3>Featuress you may want to know:</h3>
-    <h2>
-    <pre>
-- You can filter out the data you want to see by pressing on the legend above!
-  by pressing the legend above the chart for example pressing sx will toggle sx on or off
+    <pre style="font-size: 1.5em;">
+<b style="font-size: 1.3em;">- You can filter out the data you want to see by pressing on the legend above!</b>
+by pressing the legend above the chart for example pressing sx will toggle sx on or off
 
-- Export as CSV is now supported!
-  ONLY WPS Office can't parse this idk :V
-  Hey it work's on excel tho
 
-- LSTsx, LSTsy, LSTsz, LSTWork, LSTDist represents the last data exist in the dataset
+<b style="font-size: 1.3em;">- Export as CSV is now supported!</b>
+ONLY WPS Office can't parse this idk :V
+Hey it work's on excel tho, (try changing the limiter to "," if it doesn't work)
 
-- Mass can be changed (assume its unit is kg)
 
-- Formula Integral (velocity):
+<b style="font-size: 1.3em;">- LSTsx, LSTsy, LSTsz, etc represents the last data exist in the dataset</b>
+
+
+<b style="font-size: 1.3em;">- Mass can be changed (assume its unit is kg)</b>
+
+
+<b style="font-size: 1.3em;">- Formula Integral (velocity):</b>
 vel[t] = vel[t-1] + (dt*a[t-1])
 
-- Formula Integral S (displacement):
+
+<b style="font-size: 1.3em;">- Formula Integral S (displacement):</b>
 s[t] = s[t-1] + dt*(vel[t-1]+vel[t])/2
 
-- Formula Force:
+
+<b style="font-size: 1.3em;">- Formula Force:</b>
 f[t] = m*a[t]
 
-- Formula Distance:
-distance[t] = distance[t-1] + sqrt(|s[t]-s[t-1]|)
-Assume disp is a vector and |VECTOR| is taking the magnitude
 
-- Formula Work:
+<b style="font-size: 1.3em;">- Formula Distance:</b>
+distance[t] = distance[t-1] + sqrt(| s[t]-s[t-1] |)
+Assume disp is a <b>VECTOR</b> and <b>| VECTOR |</b> is taking the magnitude
+
+
+<b style="font-size: 1.3em;">- Formula Work:</b>
 w[t] = w[t-1] + (f[t-1] . (disp[t]-disp[t-1]))
 Assume F and disp is a vector and "." is a Dot Product operation between 2 vector
+This is the tricky part, if we include gravity we add the z axis with gravity (assuming z is the vertical axis)
 
-- The Total (ex: aTot, vTot, sTot) is calculated seperately by taking the magnitude of that vector
-  Pytahogrean theorem for that: sqrt(ax^2 + ay^2 + az^2)
+Work+ only counts for the positive work
+Work- only counts for the negative work
 
-- Note: Distance is scalar while displacement is vector
+
+<b style="font-size: 1.3em;">- The Total (ex: aTot, vTot, sTot) is calculated seperately by taking the magnitude of that vector</b>
+Pytahogrean theorem for that: sqrt(ax^2 + ay^2 + az^2)
+
+
+<b style="font-size: 1.3em;">- Note: Distance is scalar while displacement is vector</b>
+
+
+<b style="font-size: 1.3em;">- Note: its ΔEm not Em, because we don't count the absolute energy, just the change</b>
+  (in the calculation we assume the initial energy is 0)
     </pre>
-    </h2>
 </body>
 </html>

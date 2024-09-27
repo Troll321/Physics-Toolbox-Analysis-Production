@@ -1,10 +1,13 @@
 import Chart from "chart.js/auto"
 import { isNumber } from "chart.js/helpers";
 
+const GRAVITY = 9.80665;
+
 const fileE = document.getElementById("file");
 const massE = document.getElementById("mass");
 const exportE = document.getElementById("export");
 const limiterE = document.getElementById("limiter");
+const IgravE = document.getElementById("Igrav");
 
 const rawE = document.getElementById("raw");
 const velE = document.getElementById("vel");
@@ -12,11 +15,14 @@ const dispE = document.getElementById("displacement");
 const forceE = document.getElementById("force");
 const distE = document.getElementById("distance");
 const workE = document.getElementById("work");
+const energyE = document.getElementById("energy");
+const workemE = document.getElementById("workem");
 const lstsxE = document.getElementById("lstsx");
 const lstsyE = document.getElementById("lstsy");
 const lstszE = document.getElementById("lstsz");
 const lstdistE = document.getElementById("lstdist");
 const lstworkE = document.getElementById("lstwork");
+const lstemE = document.getElementById("lstem");
 
 let content = [];
 
@@ -27,6 +33,9 @@ massE.addEventListener("change", () => {
     updateData();
 });
 limiterE.addEventListener("change", () => {
+    updateData();
+});
+IgravE.addEventListener("change", () => {
     updateData();
 })
 
@@ -241,21 +250,32 @@ function updateData() {
 
 
         // Work
+        const Igrav = IgravE.checked;
         const workDataset = [];
-        let workArr = [];
-        for (let j = 0; j < time.length; j++) {
-            workArr.push(0);
-            if(j == 0) {continue ;}
-            const deltaS = [dispDataset[0].data[j]-dispDataset[0].data[j-1], dispDataset[1].data[j]-dispDataset[1].data[j-1], dispDataset[2].data[j]-dispDataset[2].data[j-1]];
-            workArr[j] = workArr[j-1] + (deltaS[0]*forceDataset[0].data[j-1] + deltaS[1]*forceDataset[1].data[j-1] + deltaS[2]*forceDataset[2].data[j-1]);
+        const workHeaderName = ["", "+", "-"];
+        for (let i = 0; i < 3; i++) {
+            let workArr = [];
+            for (let j = 0; j < time.length; j++) {
+                workArr.push(0);
+                if(j == 0) {continue ;}
+                const deltaS = [dispDataset[0].data[j]-dispDataset[0].data[j-1], dispDataset[1].data[j]-dispDataset[1].data[j-1], dispDataset[2].data[j]-dispDataset[2].data[j-1]];
+                const change = (deltaS[0]*forceDataset[0].data[j-1] + deltaS[1]*forceDataset[1].data[j-1] + deltaS[2]*(forceDataset[2].data[j-1] + Igrav*mass*GRAVITY));
+                if(i == 0) {
+                    workArr[j] = workArr[j-1] + change;
+                } else if (i == 1) {
+                    const berubah = (change > 0) ? change : 0;
+                    workArr[j] = workArr[j-1] + berubah;
+                } else {
+                    const berubah = (change < 0) ? change : 0;
+                    workArr[j] = workArr[j-1] + berubah;
+                }
+            }
+            workArr.pop();
+            workDataset.push({
+                label: "work"+workHeaderName[i],
+                data: workArr
+            });
         }
-        workArr.pop();
-        workDataset.push({
-            label: "work",
-            data: workArr
-        });
-            
-
         myCharts.push(new Chart(workE, {
             type: "line",
             data: {
@@ -264,7 +284,40 @@ function updateData() {
             },
             ...myOptions
         }));
-        lstworkE.innerText = workArr[workArr.length-1];
+        lstworkE.innerText = workDataset[0].data[workDataset[0].data.length-1];
+
+
+        // Energy
+        const energyDataset = [];
+        const energyHeaderName = ["k", "p", "m"];
+        for (let i = 0; i < 3; i++) {
+            let energyArr = [];
+            for (let j = 0; j < time.length; j++) {
+                energyArr.push(0);
+                if(j == 0) {continue ;}
+                if(i == 0) {
+                    energyArr[j] = mass*(velDataset[3].data[j]**2)/2;
+                } else if (i == 1) {
+                    energyArr[j] = mass*GRAVITY*dispDataset[2].data[j];
+                } else {
+                    energyArr[j] = energyDataset[0].data[j] + energyDataset[1].data[j];
+                }
+            }
+            energyArr.pop();
+            energyDataset.push({
+                label: "ΔE"+energyHeaderName[i],
+                data: energyArr
+            });
+        }
+        myCharts.push(new Chart(energyE, {
+            type: "line",
+            data: {
+                labels: time,
+                datasets: energyDataset
+            },
+            ...myOptions
+        }));
+        lstemE.innerText = energyDataset[2].data[energyDataset[2].data.length-1];
 
 
         const datasets = [
@@ -274,6 +327,7 @@ function updateData() {
         ,forceDataset
         ,distDataset
         ,workDataset
+        ,energyDataset
         ];
 
         const myHeader = ["time"];
@@ -294,8 +348,6 @@ function updateData() {
             content.push(myArr);
         }
 
-        console.log(content);
-
         const limiter = limiterE.value || ",";
         exportE.href = `data:application/octet-stream,${content.map(arbek => {
             return arbek.map(val => {
@@ -308,7 +360,6 @@ function updateData() {
                     for (let w = 0; w < jum; w++) {
                         mystr += "0";                        
                     }
-                    console.log(val, mystr);
                     return mystr;
                 } else {
                     return mystr;
