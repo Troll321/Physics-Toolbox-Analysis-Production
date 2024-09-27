@@ -16,7 +16,6 @@ const forceE = document.getElementById("force");
 const distE = document.getElementById("distance");
 const workE = document.getElementById("work");
 const energyE = document.getElementById("energy");
-const workemE = document.getElementById("workem");
 const lstsxE = document.getElementById("lstsx");
 const lstsyE = document.getElementById("lstsy");
 const lstszE = document.getElementById("lstsz");
