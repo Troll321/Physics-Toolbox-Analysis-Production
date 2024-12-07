@@ -115,13 +115,41 @@ function updateData() {
         arr = arr.map(now => {let bek = now; now.shift(); return bek;});
 
         const rawDatasets = [];
-        for (let i = 0; i < header.length; i++) {
-            rawDatasets.push({
-                label: "a"+header[i],
-                data: arr.map(now => {return now[i];}),
-                ...getBarDataOptions(i)
-            });
+
+        if(header.length < 4) {
+            header.push("tot");
+            for (let i = 0; i < 4; i++) {
+                if(i == 3) {
+                    const nowData = [];
+                    for (let j = 0; j < time.length; j++) {
+                        nowData.push(0);
+                        nowData[j] = Math.sqrt(rawDatasets[0].data[j]**2 + rawDatasets[1].data[j]**2 + rawDatasets[2].data[j]**2);
+                    }
+                    nowData.pop();
+
+                    rawDatasets.push({
+                        label: "w"+header[i],
+                        data: nowData,
+                        ...getBarDataOptions(i)
+                    });
+                    break ;
+                }
+                rawDatasets.push({
+                    label: "w"+header[i],
+                    data: arr.map(now => {return now[i];}),
+                    ...getBarDataOptions(i)
+                });
+            }
+        } else {
+            for (let i = 0; i < header.length; i++) {
+                rawDatasets.push({
+                    label: "a"+header[i],
+                    data: arr.map(now => {return now[i];}),
+                    ...getBarDataOptions(i)
+                });
+            }
         }
+
 
         myCharts.push(new Chart(rawE, {
             type: "bar",
