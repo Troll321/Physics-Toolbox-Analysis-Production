@@ -92,6 +92,7 @@ function updateData() {
     
     console.log("Reading!");
     const reader = new FileReader();
+    let isGyro = false;
     reader.addEventListener("load", e => {
         // Column 0 --> Time
         // ACCELERATION
@@ -117,6 +118,7 @@ function updateData() {
         const rawDatasets = [];
 
         if(header.length < 4) {
+            isGyro = true;
             header.push("tot");
             for (let i = 0; i < 4; i++) {
                 if(i == 3) {
@@ -178,7 +180,7 @@ function updateData() {
             }
             velArr.pop();
             velDataset.push({
-                label: "v"+header[i],
+                label: (isGyro ? "θ" : "v") + header[i],
                 data: velArr
             });
         }
