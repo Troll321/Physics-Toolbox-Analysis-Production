@@ -97,12 +97,12 @@ function updateData() {
         // Column 0 --> Time
         // ACCELERATION
         const mass = parseFloat(massE.value) || 0;
-        let arr = reader.result.split("\n").map(now => {return now.split(",").map(
+        let arr = reader.result.split("\r").join("").split("\n").map(now => {return now.split(",").map(
             val => {
                 return !isNaN(parseFloat(val)) ? parseFloat(val) : val;
         });});
         if (arr[0].length !== arr[1].length) {
-            arr = reader.result.split("\n").map(now => {return now.split(";").map(
+            arr = reader.result.split("\r").join("").split("\n").map(now => {return now.split(";").map(
                 val => {
                     return !isNaN(parseFloat(val.split(",").join("."))) ? parseFloat(val.split(",").join(".")) : val;
             });});
