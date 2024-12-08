@@ -130,17 +130,23 @@ function updateData() {
                     nowData.pop();
 
                     rawDatasets.push({
-                        label: "w"+header[i],
+                        label: "α"+header[i],
                         data: nowData,
                         ...getBarDataOptions(i)
                     });
                     break ;
+                } else {
+                    const nowData = [];
+                    for (let j = 0; j < arr.length-1; j++) {
+                        nowData.push(0);
+                        nowData[j] = (arr[j+1][i]-arr[j][i])/(time[j+1]-time[j]);
+                    }
+                    rawDatasets.push({
+                        label: "α"+header[i],
+                        data: nowData,
+                        ...getBarDataOptions(i)
+                    });
                 }
-                rawDatasets.push({
-                    label: "w"+header[i],
-                    data: arr.map(now => {return now[i];}),
-                    ...getBarDataOptions(i)
-                });
             }
         } else {
             for (let i = 0; i < header.length; i++) {
@@ -173,14 +179,15 @@ function updateData() {
                     velArr[j] = Math.sqrt(velDataset[0].data[j]**2 + velDataset[1].data[j]**2 + velDataset[2].data[j]**2);
                     continue ;
                 }
-                velArr[j] = velArr[j-1] + ((time[j]-time[j-1])*arr[j-1][i]);
-                if(!velArr[j]) {
-                    console.log(velArr[j], (time[j]-time[j-1]), arr[j-1][i]);
+                if(isGyro) {
+                    velArr[j] = arr[j][i];
+                } else {
+                    velArr[j] = velArr[j-1] + ((time[j]-time[j-1])*arr[j-1][i]);
                 }
             }
             velArr.pop();
             velDataset.push({
-                label: (isGyro ? "θ" : "v") + header[i],
+                label: (isGyro ? "w" : "v") + header[i],
                 data: velArr
             });
         }
@@ -205,11 +212,15 @@ function updateData() {
                     dispArr[j] = Math.sqrt(dispDataset[0].data[j]**2 + dispDataset[1].data[j]**2 + dispDataset[2].data[j]**2);
                     continue ;
                 }
-                dispArr[j] = dispArr[j-1] + ((time[j]-time[j-1])*(velDataset[i].data[j]+velDataset[i].data[j-1])/2);
+                if(isGyro) {
+                    dispArr[j] = dispArr[j-1] + ((time[j]-time[j-1])*arr[j-1][i]);
+                } else {
+                    dispArr[j] = dispArr[j-1] + ((time[j]-time[j-1])*(velDataset[i].data[j]+velDataset[i].data[j-1])/2);
+                }
             }
             dispArr.pop();
             dispDataset.push({
-                label: "s"+header[i],
+                label: (isGyro ? "θ" : "s")+header[i],
                 data: dispArr
             });
             
