@@ -377,7 +377,11 @@ function updateData() {
         const myHeader = ["time"];
         datasets.forEach(dataset => {
             dataset.forEach(ds => {
-                myHeader.push(ds.label);
+                let now = ds.label;
+                now = now.split("Δ").join("delta ");
+                now = now.split("θ").join("teta ");
+                now = now.split("α").join("alpha ");
+                myHeader.push(now);
             });
         });
         content.push(myHeader);
